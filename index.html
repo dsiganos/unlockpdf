@@ -3,6 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!--
+    Content-Security-Policy (defense-in-depth; GitHub Pages can't set HTTP headers).
+    Everything is same-origin: HTML/CSS/JS + the module worker + the vendored MuPDF
+    wasm. 'wasm-unsafe-eval' is required to compile/instantiate WebAssembly.
+    No external origins are allowed, which also enforces the "nothing leaves your
+    device" guarantee. Note: frame-ancestors / X-Frame-Options can't be set via
+    <meta>, so anti-clickjacking would need a host that sends headers.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; img-src 'self'; connect-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'" />
+
   <title>UnlockPDF &mdash; Remove a PDF Password (100% in your browser)</title>
   <meta name="description" content="UnlockPDF removes the password from a PDF entirely in your browser. Your file never leaves your device." />
   <link rel="stylesheet" href="./styles.css" />

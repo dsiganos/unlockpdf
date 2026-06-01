@@ -29,19 +29,24 @@ Then open <http://localhost:8000>.
 
 ## Deploy to GitHub Pages
 
-1. Push this repository to GitHub.
-2. Go to **Settings > Pages** and set the **Source** to **GitHub Actions**.
-3. That's it — the included workflow (`.github/workflows/deploy.yml`) builds and
+This project lives at **<https://github.com/dsiganos/unlockpdf>**.
+
+1. Open the repo's
+   [**Settings → Pages**](https://github.com/dsiganos/unlockpdf/settings/pages)
+   and set the **Source** to **GitHub Actions**.
+2. That's it — the included workflow (`.github/workflows/deploy.yml`) builds and
    deploys on every push to `main`/`master` (and can be run manually via
-   *Run workflow*).
+   *Run workflow* on the
+   [Actions tab](https://github.com/dsiganos/unlockpdf/actions)).
 
-Your site will be served at:
+Once enabled, the site is served at:
 
 ```
-https://USERNAME.github.io/REPO/
+https://dsiganos.github.io/unlockpdf/
 ```
 
-(replace `USERNAME` and `REPO` with your GitHub username and repository name).
+A custom domain (`unlockpdf.app`) can be attached under **Settings → Pages →
+Custom domain** once registered.
 
 A `.nojekyll` file is included so GitHub Pages serves the `vendor/` directory
 and all files verbatim (Jekyll is disabled).
