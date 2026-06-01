@@ -1,0 +1,19 @@
+# Dev-only Node dependencies (mupdf is vendored under vendor/ for the site)
+node_modules/
+
+# Test scratch output
+test/tmp/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+*~
+
+# Scratch PDF fixtures generated/used during local testing (repo root only)
+/plain.pdf
+/encrypted.pdf
+/unlocked.pdf
+
+# NOTE: do not ignore source files (index.html, styles.css, app.js, worker.js)
+# or the vendored library under vendor/ — those must be committed and deployed.

@@ -1,0 +1,15 @@
+{
+  "name": "unlockpdf",
+  "version": "1.0.0",
+  "description": "UnlockPDF — remove a known password from a PDF entirely in the browser (client-side, MuPDF/WebAssembly).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "mupdf": "^1.27.0"
+  }
+}

@@ -1,0 +1,54 @@
+name: Deploy to GitHub Pages
+
+# This site is pure static files (HTML/CSS/JS + a vendored MuPDF WebAssembly
+# library under vendor/). There is NO build step and NO runtime dependency on
+# Node — mupdf is vendored, so we do not run `npm install` here.
+#
+# We simply upload the repo root (path: ".") as the Pages artifact and deploy
+# it. node_modules/ and test/ may be present in the repo but are harmless to
+# upload; if you prefer a leaner artifact you can delete them before the
+# upload step. We keep it simple with path "." here.
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+# Allow the GITHUB_TOKEN to deploy to Pages and verify the deployment origin.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment; do not cancel in-progress runs so a
+# deployment can complete.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+
+      # No build/install needed — the repo root IS the site.
+      - name: Upload static site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

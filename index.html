@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UnlockPDF &mdash; Remove a PDF Password (100% in your browser)</title>
+  <meta name="description" content="UnlockPDF removes the password from a PDF entirely in your browser. Your file never leaves your device." />
+  <link rel="stylesheet" href="./styles.css" />
+
+  <!--
+    Structured data for rich search results.
+    NOTE: update the https://unlockpdf.app/ URL below if the live site URL differs,
+    and keep the FAQ answers in sync with the visible <details> text on the page
+    (Google requires the JSON-LD answers to match the on-page content).
+  -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebApplication",
+        "name": "UnlockPDF",
+        "url": "https://unlockpdf.app/",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any (web browser)",
+        "browserRequirements": "Requires a modern browser with WebAssembly support",
+        "description": "UnlockPDF removes the password from a PDF entirely in your browser. Your file and its password never leave your device.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "featureList": [
+          "Removes a known PDF password in the browser",
+          "100% client-side — no upload, no server",
+          "Works offline once loaded",
+          "Open source"
+        ],
+        "isAccessibleForFree": true
+      },
+      {
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Is my PDF uploaded to a server?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. Your file and its password are processed entirely on your device using WebAssembly. Nothing is uploaded — there is no server to receive it. You can confirm this yourself by opening your browser's network tab: no file ever leaves your device."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can this crack or recover a password I don't know?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. This tool only removes a password you already know. You must enter the correct password; it does not guess, brute-force, or recover unknown passwords. If you've lost the password, this tool cannot open the file."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Does it work offline?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. Once the page has loaded, all processing happens locally in your browser, so it keeps working without an internet connection."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which devices and browsers are supported?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It runs in any modern browser — Chrome, Firefox, Safari, and Edge — on Windows, macOS, Linux, Android, and iPhone or iPad. No app or installation is needed."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "What kind of PDF password does it remove?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "It removes the open password (the one your PDF reader prompts you for). Once removed, the new PDF opens freely with no password prompt and no usage restrictions."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is there a file size limit?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "There is no fixed limit. Because everything runs in your browser, very large files are constrained only by your device's available memory rather than any upload cap."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is it free and open source?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The tool is free to use and the source code is open, so anyone can inspect exactly what it does. It is powered by the MuPDF library compiled to WebAssembly."
+            }
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="card">
+    <header class="header">
+      <h1>UnlockPDF</h1>
+      <p class="subtitle">Remove the password from a PDF so it opens freely &mdash; right here in your browser.</p>
+    </header>
+
+    <!-- Prominent privacy reassurance -->
+    <p class="privacy-badge" role="note">
+      <span class="privacy-icon" aria-hidden="true">&#128274;</span>
+      <span><strong>100% private</strong> &mdash; your file is processed entirely in your browser and never uploaded to any server.</span>
+    </p>
+
+    <!-- Drag-and-drop dropzone that is also a clickable file picker -->
+    <div
+      id="dropzone"
+      class="dropzone"
+      role="button"
+      tabindex="0"
+      aria-label="Choose a PDF file or drag and drop it here"
+    >
+      <input
+        type="file"
+        id="fileInput"
+        accept="application/pdf,.pdf"
+        class="visually-hidden"
+      />
+      <div class="dropzone-inner">
+        <span class="dropzone-icon" aria-hidden="true">&#128196;</span>
+        <p class="dropzone-text">
+          <strong>Click to choose a PDF</strong> or drag &amp; drop it here
+        </p>
+        <p id="fileMeta" class="file-meta" hidden></p>
+      </div>
+    </div>
+
+    <!-- Password field with show/hide toggle -->
+    <div class="field">
+      <label for="passwordInput">PDF password</label>
+      <div class="password-wrap">
+        <input
+          type="password"
+          id="passwordInput"
+          autocomplete="off"
+          placeholder="Enter the PDF's password"
+        />
+        <button type="button" id="togglePassword" class="toggle-password" aria-pressed="false">
+          Show
+        </button>
+      </div>
+    </div>
+
+    <!-- Primary action -->
+    <button type="button" id="removeBtn" class="btn-primary" disabled>
+      Remove password
+    </button>
+
+    <!-- Status / result area -->
+    <div id="status" class="status" role="status" aria-live="polite" hidden></div>
+
+    <!-- How it works / FAQ -->
+    <section class="faq" aria-labelledby="faq-heading">
+      <h2 id="faq-heading">Frequently asked questions</h2>
+
+      <details>
+        <summary>Is my PDF uploaded to a server?</summary>
+        <p>No. Your file and its password are processed entirely on your device using WebAssembly. Nothing is uploaded &mdash; there is no server to receive it. You can confirm this yourself by opening your browser&rsquo;s network tab: no file ever leaves your device.</p>
+      </details>
+
+      <details>
+        <summary>Can this crack or recover a password I don&rsquo;t know?</summary>
+        <p>No. This tool only removes a password you already know. You must enter the correct password; it does not guess, brute-force, or recover unknown passwords. If you&rsquo;ve lost the password, this tool cannot open the file.</p>
+      </details>
+
+      <details>
+        <summary>Does it work offline?</summary>
+        <p>Yes. Once the page has loaded, all processing happens locally in your browser, so it keeps working without an internet connection.</p>
+      </details>
+
+      <details>
+        <summary>Which devices and browsers are supported?</summary>
+        <p>It runs in any modern browser &mdash; Chrome, Firefox, Safari, and Edge &mdash; on Windows, macOS, Linux, Android, and iPhone or iPad. No app or installation is needed.</p>
+      </details>
+
+      <details>
+        <summary>What kind of PDF password does it remove?</summary>
+        <p>It removes the open password (the one your PDF reader prompts you for). Once removed, the new PDF opens freely with no password prompt and no usage restrictions.</p>
+      </details>
+
+      <details>
+        <summary>Is there a file size limit?</summary>
+        <p>There is no fixed limit. Because everything runs in your browser, very large files are constrained only by your device&rsquo;s available memory rather than any upload cap.</p>
+      </details>
+
+      <details>
+        <summary>Is it free and open source?</summary>
+        <p>Yes. The tool is free to use and the source code is open, so anyone can inspect exactly what it does. It is powered by the MuPDF library compiled to WebAssembly.</p>
+      </details>
+    </section>
+
+    <footer class="footer">
+      <p>Powered by MuPDF (WebAssembly). Open source.</p>
+    </footer>
+  </main>
+
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
